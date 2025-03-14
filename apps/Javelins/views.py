@@ -19,8 +19,8 @@ class ListFilteredJavelinsView(ListAPIView):
     serializer_class = ListJavelinSerializer
 
     def get_queryset(self):
-        business_id = self.kwargs['business_id']
-        return Javelin.objects.filter(business_id=business_id)
+        sector_id = self.kwargs['sector_id']
+        return Javelin.objects.filter(sector_id=sector_id)
 
 #View used to @PATCH a javelin
 class UpdateJavelinView(UpdateAPIView):
