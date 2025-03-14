@@ -20,7 +20,7 @@ class ListFilteredSectorsView(ListAPIView):
 
     def get_queryset(self):
         business_id = self.kwargs['business_id']
-        return Sector.objects.filter(Business_id=business_id)
+        return Sector.objects.filter(business_id=business_id)
 
 #View used to @POST a sectors
 class CreateSectorsView(CreateAPIView):

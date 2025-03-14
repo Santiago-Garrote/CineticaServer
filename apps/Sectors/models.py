@@ -6,6 +6,6 @@ from apps.Businesses.models import Business
 class Sector(models.Model):
     #Data
     name = models.CharField(max_length=100)
-    Scheme = models.CharField(max_length=100)
+    scheme = models.CharField(max_length=100)
     #Foreign Key to the Business where it is contained
-    Business = models.ForeignKey(Business, on_delete=models.CASCADE)
+    business = models.ForeignKey(Business, on_delete=models.CASCADE)
