@@ -15,7 +15,7 @@ class ListOutletView(ListAPIView):
     serializer_class = ListOutletSerializer
 
 #View used to @GET all outlets
-class ListFilteredOutletView(ListAPIView):
+class ListFilteredBySectorOutletView(ListAPIView):
     queryset = Outlet.objects.all()
     permission_classes = [IsAuthenticated]
     serializer_class = ListOutletSerializer
@@ -23,6 +23,15 @@ class ListFilteredOutletView(ListAPIView):
     def get_queryset(self):
         sector_id = self.kwargs['sector_id']
         return Outlet.objects.filter(sector_id=sector_id)
+
+#View used to @GET all outlets
+class ListFilteredByEmptyCircuitBreakerOutletView(ListAPIView):
+    queryset = Outlet.objects.all()
+    permission_classes = [IsAuthenticated]
+    serializer_class = ListOutletSerializer
+
+    def get_queryset(self):
+        return Outlet.objects.filter(circuitBreaker__isnull=True)
 
 #View used to @PATCH an outlet
 class UpdateOutletView(UpdateAPIView):

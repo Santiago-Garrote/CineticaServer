@@ -19,7 +19,7 @@ class UpdateOutletSerializer(serializers.ModelSerializer):
 class UpdateOutletCircuitBreakerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Outlet
-        fields = ['observations', 'measurement']
+        fields = ['circuitBreaker']
 
 
 #View used to @POST an outlet
