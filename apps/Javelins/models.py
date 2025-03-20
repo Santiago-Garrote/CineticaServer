@@ -11,8 +11,9 @@ from core.abstractModels.models import ConnectionPoint
 class Javelin(ConnectionPoint):
     sector = models.ForeignKey(Sector, on_delete=models.CASCADE)
     measurementValue = models.FloatField()
-    observations = models.TextField(blank=True)
-    measurement = models.ForeignKey(Measurement, on_delete=models.SET_NULL, null=True)
     connection = models.CharField(max_length=100)
     type = models.CharField(max_length=100)
     status = models.CharField(max_length=100)
+    usoPat = models.CharField(max_length=50)
+    observations = models.TextField(blank=True)
+    measurement = models.ForeignKey(Measurement, on_delete=models.SET_NULL, null=True)

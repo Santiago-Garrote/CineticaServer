@@ -10,7 +10,7 @@ class Measurement(models.Model):
     business = models.ForeignKey(Business, on_delete=models.CASCADE)
     tool = models.ForeignKey(Tool, on_delete=models.SET_NULL, null=True)
     startDate = models.DateTimeField()
-    endDate = models.DateTimeField()
+    endDate = models.DateTimeField(null=True)
     methodology = models.CharField(max_length=100)
     observations = models.TextField(blank=True)
 

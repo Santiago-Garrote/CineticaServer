@@ -12,7 +12,7 @@ class ListJavelinSerializer(serializers.ModelSerializer):
 class UpdateJavelinSerializer(serializers.ModelSerializer):
     class Meta:
         model = Javelin
-        fields = ['measurementValue', 'observations', 'measurement']
+        fields = ['status', 'measurementValue', 'observations', 'measurement']
 
 #Serializer used to @POST a javelin
 class CreateJavelinSerializer(serializers.ModelSerializer):

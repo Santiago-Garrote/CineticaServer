@@ -31,13 +31,22 @@ class ListFilteredByEmptyCircuitBreakerOutletView(ListAPIView):
     serializer_class = ListOutletSerializer
 
     def get_queryset(self):
-        return Outlet.objects.filter(circuitBreaker__isnull=True)
+        return Outlet.objects.filter(
+            circuitBreaker__isnull=True,
+            sector__business_id=self.kwargs['sector_id']
+        )
 
 #View used to @PATCH an outlet
 class UpdateOutletView(UpdateAPIView):
     queryset = Outlet.objects.all()
     permission_classes = [IsAuthenticated]
     serializer_class = UpdateOutletSerializer
+
+#View used to @PATCH an outlet
+class UpdateCircuitBreakerOfOutletView(UpdateAPIView):
+    queryset = Outlet.objects.all()
+    permission_classes = [IsAuthenticated]
+    serializer_class = UpdateOutletCircuitBreakerSerializer
 
 #View used to @PATCH the circuit breaker of an outlet
 class UpdateOutletCircuitBreakerView(UpdateAPIView):

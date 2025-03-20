@@ -13,7 +13,7 @@ class ListOutletSerializer(serializers.ModelSerializer):
 class UpdateOutletSerializer(serializers.ModelSerializer):
     class Meta:
         model = Outlet
-        fields = ['circuitBreaker']
+        fields = ['observations', 'measurement']
 
 #View used to @PATCH the circuit breaker of an outlet
 class UpdateOutletCircuitBreakerSerializer(serializers.ModelSerializer):
