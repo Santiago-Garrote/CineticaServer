@@ -23,6 +23,9 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
+# Bash files
+*.sh
+
 # Dockerfiles
 Dockerfile
 *.tar
