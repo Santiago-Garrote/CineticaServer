@@ -2,6 +2,7 @@ from django.db import models
 
 from apps.Measurements.models import PatMeasurement
 from apps.Panels.models import Panel
+from apps.Sectors.models import Sector
 
 
 # Create your models here.
@@ -9,6 +10,7 @@ from apps.Panels.models import Panel
 #Model used for a circuit breaker
 class CircuitBreaker(models.Model):
     name = models.CharField(max_length=100)
+    sector = models.ForeignKey(Sector, on_delete=models.CASCADE)
     brand = models.CharField(max_length=100)
     model = models.CharField(max_length=100)
     I = models.SmallIntegerField()
