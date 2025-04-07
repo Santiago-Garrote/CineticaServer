@@ -1,6 +1,6 @@
 from django.db import models
 
-from apps.Measurements.models import Measurement
+from apps.Measurements.models import PatMeasurement
 from apps.Panels.models import Panel
 
 
@@ -20,7 +20,7 @@ class CircuitBreaker(models.Model):
     degrees = models.FloatField()
     panel = models.ForeignKey(Panel, on_delete=models.CASCADE)
     observations = models.TextField(blank=True)
-    measurement = models.ForeignKey(Measurement, on_delete=models.SET_NULL, null=True)
+    measurement = models.ForeignKey(PatMeasurement, on_delete=models.SET_NULL, null=True)
 
 
 

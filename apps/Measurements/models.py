@@ -1,19 +1,20 @@
 from django.db import models
 from apps.Businesses.models import Business
 from apps.Tools.models import Tool
+from core.abstractModels.models import Measurement
+
 
 # Create your models here.
 
 #Model used for Measurements
-class Measurement(models.Model):
-    name = models.CharField(max_length=100, blank=True)
-    business = models.ForeignKey(Business, on_delete=models.CASCADE)
-    tool = models.ForeignKey(Tool, on_delete=models.SET_NULL, null=True)
-    startDate = models.DateTimeField()
-    endDate = models.DateTimeField(null=True)
-    methodology = models.CharField(max_length=100)
-    observations = models.TextField(blank=True)
-
+class PatMeasurement(Measurement):
     def save(self, *args, **kwargs):
-        self.name = f'{self.business.name} - {self.startDate.date()}'
+        difMeasurement = models.ForeignKey('DifMeasurement', on_delete=models.SET_NULL, null=True)
+
+        self.name = f'Medicion P.A.T. - {self.business.name} - {self.startDate.date()}'
+        super(Measurement, self).save(*args, **kwargs)
+
+class DifMeasurement(Measurement):
+    def save(self, *args, **kwargs):
+        self.name = f'Medicion Dif. - {self.business.name} - {self.startDate.date()}'
         super(Measurement, self).save(*args, **kwargs)

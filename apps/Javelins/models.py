@@ -1,7 +1,7 @@
 from django.db import models
 
 from apps.Businesses.models import Business
-from apps.Measurements.models import Measurement
+from apps.Measurements.models import PatMeasurement
 from apps.Sectors.models import Sector
 from core.abstractModels.models import ConnectionPoint
 
@@ -16,4 +16,4 @@ class Javelin(ConnectionPoint):
     status = models.CharField(max_length=100)
     usoPat = models.CharField(max_length=50)
     observations = models.TextField(blank=True)
-    measurement = models.ForeignKey(Measurement, on_delete=models.SET_NULL, null=True)
+    measurement = models.ForeignKey(PatMeasurement, on_delete=models.SET_NULL, null=True)

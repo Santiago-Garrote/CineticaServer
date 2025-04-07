@@ -1,7 +1,7 @@
 from django.db import models
 
 from apps.Businesses.models import Business
-from apps.Measurements.models import Measurement
+from apps.Measurements.models import PatMeasurement
 from core.abstractModels.models import ConnectionPoint
 
 
@@ -13,7 +13,7 @@ class Panel(ConnectionPoint):
     hasBar = models.BooleanField()
     section = models.FloatField()
     observation = models.TextField(blank=True)
-    measurement = models.ForeignKey(Measurement, on_delete=models.SET_NULL, null=True)
+    measurement = models.ForeignKey(PatMeasurement, on_delete=models.SET_NULL, null=True)
 
 #This is the model used for sectional panels
 class SectionalPanel(Panel):
