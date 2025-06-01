@@ -5,7 +5,7 @@ from apps.Businesses.models import Business
 #Model used for Sectors
 class Sector(models.Model):
     #Data
-    name = models.CharField(max_length=100)
-    scheme = models.CharField(max_length=100)
+    name = models.TextField()
+    scheme = models.TextField()
     #Foreign Key to the Business where it is contained
     business = models.ForeignKey(Business, on_delete=models.CASCADE)

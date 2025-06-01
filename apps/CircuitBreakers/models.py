@@ -1,6 +1,6 @@
 from django.db import models
 
-from apps.Measurements.models import PatMeasurement
+from apps.Measurements.models import DifMeasurement
 from apps.Panels.models import Panel
 from apps.Sectors.models import Sector
 
@@ -9,10 +9,10 @@ from apps.Sectors.models import Sector
 
 #Model used for a circuit breaker
 class CircuitBreaker(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.TextField()
     sector = models.ForeignKey(Sector, on_delete=models.CASCADE)
-    brand = models.CharField(max_length=100)
-    model = models.CharField(max_length=100)
+    brand = models.TextField()
+    model = models.TextField()
     I = models.SmallIntegerField()
     deltaN = models.SmallIntegerField()
     half = models.SmallIntegerField()
@@ -22,7 +22,7 @@ class CircuitBreaker(models.Model):
     degrees = models.FloatField()
     panel = models.ForeignKey(Panel, on_delete=models.CASCADE)
     observations = models.TextField(blank=True)
-    measurement = models.ForeignKey(PatMeasurement, on_delete=models.SET_NULL, null=True)
+    measurement = models.ForeignKey(DifMeasurement, on_delete=models.SET_NULL, null=True)
 
 
 

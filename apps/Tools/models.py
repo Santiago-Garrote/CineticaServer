@@ -4,10 +4,10 @@ from django.db import models
 
 #Model used for Tools
 class Tool(models.Model):
-    name = models.CharField(max_length=50, blank=True)
-    brand = models.CharField(max_length=50)
-    model = models.CharField(max_length=50)
-    serial = models.CharField(max_length=50)
+    name = models.TextField(blank=True)
+    brand = models.TextField()
+    model = models.TextField()
+    serial = models.TextField()
     calibrationDate = models.DateField()
 
     def save(self, *args, **kwargs):

@@ -9,11 +9,12 @@ class Business(models.Model):
     # Data
     CUIT = models.BigIntegerField()
     cp = models.IntegerField()
-    name = models.CharField(max_length=50)
-    province = models.CharField(max_length=50)
-    locality = models.CharField(max_length=50)
-    direction = models.CharField(max_length=50)
-    soil = models.CharField(max_length=50)
+    name = models.TextField()
+    province = models.TextField()
+    locality = models.TextField()
+    direction = models.TextField()
+    soil = models.TextField()
 
     def save(self, *args, **kwargs):
         self.id = int(f"{self.CUIT}{self.cp}")
+        super().save(*args, **kwargs)

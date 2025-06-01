@@ -28,21 +28,21 @@ class CreatePATMeasurement(CreateAPIView):
 
 #View used to @GET a Dif Measurement not ended
 class ListActiveDifMeasurement(ListAPIView):
-    queryset = PatMeasurement.objects.all()
+    queryset = DifMeasurement.objects.all()
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = ListDifMeasurementSerializer
 
     def get_queryset(self):
-        return PatMeasurement.objects.filter(endDate__isnull=True)
+        return DifMeasurement.objects.filter(endDate__isnull=True)
 
 #View used to @PATCH a Dif Measurement
 class UpdateDifMeasurement(UpdateAPIView):
-    queryset = PatMeasurement.objects.all()
+    queryset = DifMeasurement.objects.all()
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = UpdateDifMeasurementSerializer
 
 #View used to @POST a Dif Measurement
 class CreateDifMeasurement(CreateAPIView):
-    queryset = PatMeasurement.objects.all()
+    queryset = DifMeasurement.objects.all()
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = CreateDifMeasurementSerializer

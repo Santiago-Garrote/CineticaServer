@@ -9,13 +9,13 @@ from apps.Tools.models import Tool
 
 #This is the class which is either at the start or end of a connector
 class ConnectionPoint(PolymorphicModel):
-    name = models.CharField(max_length=500)
+    name = models.TextField()
 
 class Measurement(PolymorphicModel):
-    name = models.CharField(max_length=300, blank=True)
+    name = models.TextField(blank=True)
     business = models.ForeignKey(Business, on_delete=models.CASCADE)
     tool = models.ForeignKey(Tool, on_delete=models.SET_NULL, null=True)
     startDate = models.DateTimeField()
     endDate = models.DateTimeField(null=True)
-    methodology = models.CharField(max_length=300)
+    methodology = models.TextField()
     observations = models.TextField(blank=True)
