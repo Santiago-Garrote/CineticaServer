@@ -12,7 +12,6 @@ class Panel(ConnectionPoint):
     business = models.ForeignKey(Business, on_delete=models.CASCADE)
     hasBar = models.BooleanField()
     section = models.FloatField()
-    observation = models.TextField(blank=True)
     measurement = models.ForeignKey(PatMeasurement, on_delete=models.SET_NULL, null=True)
 
 #This is the model used for sectional panels

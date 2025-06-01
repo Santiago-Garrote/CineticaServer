@@ -99,6 +99,7 @@ INSTALLED_APPS = [
     'apps.Panels',
     'apps.Sectors',
     'apps.Tools',
+    'apps.Images',
     'core.abstractModels',
 ]
 

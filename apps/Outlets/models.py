@@ -10,5 +10,4 @@ from core.abstractModels.models import ConnectionPoint
 class Outlet(ConnectionPoint):
     sector = models.ForeignKey(Sector, on_delete=models.CASCADE)
     circuitBreaker = models.ForeignKey(CircuitBreaker, on_delete=models.SET_NULL, null=True)
-    observations = models.TextField(blank=True)
     measurement = models.ForeignKey(PatMeasurement, on_delete=models.SET_NULL, null=True)

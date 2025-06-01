@@ -3,12 +3,13 @@ from django.db import models
 from apps.Measurements.models import DifMeasurement
 from apps.Panels.models import Panel
 from apps.Sectors.models import Sector
+from core.abstractModels.models import ObservableModel
 
 
 # Create your models here.
 
 #Model used for a circuit breaker
-class CircuitBreaker(models.Model):
+class CircuitBreaker(ObservableModel):
     name = models.TextField()
     sector = models.ForeignKey(Sector, on_delete=models.CASCADE)
     brand = models.TextField()
@@ -21,7 +22,6 @@ class CircuitBreaker(models.Model):
     fiveIn = models.FloatField()
     degrees = models.FloatField()
     panel = models.ForeignKey(Panel, on_delete=models.CASCADE)
-    observations = models.TextField(blank=True)
     measurement = models.ForeignKey(DifMeasurement, on_delete=models.SET_NULL, null=True)
 
 

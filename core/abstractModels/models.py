@@ -7,8 +7,12 @@ from apps.Tools.models import Tool
 
 # Create your abstract models here.
 
+#This is the class which says that a model should have possible observations.
+class ObservableModel(PolymorphicModel):
+    observations = models.TextField(blank=True)
+
 #This is the class which is either at the start or end of a connector
-class ConnectionPoint(PolymorphicModel):
+class ConnectionPoint(ObservableModel):
     name = models.TextField()
 
 class Measurement(PolymorphicModel):
