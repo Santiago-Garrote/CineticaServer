@@ -13,13 +13,5 @@ class Migration(migrations.Migration):
         migrations.AlterModelOptions(
             name='circuitbreaker',
             options={'base_manager_name': 'objects'},
-        ),
-        migrations.RemoveField(
-            model_name='circuitbreaker',
-            name='id',
-        ),
-        migrations.RemoveField(
-            model_name='circuitbreaker',
-            name='observations',
-        ),
+        )
     ]

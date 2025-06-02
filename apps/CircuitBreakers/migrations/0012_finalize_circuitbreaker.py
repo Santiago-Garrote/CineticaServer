@@ -1,24 +1,32 @@
+# 0012_finalize_circuitbreaker.py
 from django.db import migrations, models
 import django.db.models.deletion
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('CircuitBreakers', '0009_alter_circuitbreaker_options_and_more'),
-        ('abstractModels', '0004_remove_connectionpoint_id_and_more'),
+        ('CircuitBreakers', '0011_migrate_data_to_parent'),
     ]
 
     operations = [
-        migrations.AddField(
+        migrations.AlterField(
             model_name='circuitbreaker',
             name='observablemodel_ptr',
             field=models.OneToOneField(
-                null=True,
+                auto_created=True,
                 on_delete=django.db.models.deletion.CASCADE,
                 parent_link=True,
-                primary_key=False,
+                primary_key=True,
                 serialize=False,
                 to='abstractModels.observablemodel',
             ),
+        ),
+        migrations.RemoveField(
+            model_name='circuitbreaker',
+            name='observations',
+        ),
+        migrations.RemoveField(
+            model_name='circuitbreaker',
+            name='id',
         ),
     ]
