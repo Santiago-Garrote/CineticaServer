@@ -10,7 +10,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('Images', '0001_initial'),
-        ('abstractModels', '0004_remove_connectionpoint_id_and_more'),
+        ('abstractModels', '0006_finalize_pk_and_cleanup'),
     ]
 
     operations = [

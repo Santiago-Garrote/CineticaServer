@@ -8,7 +8,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('Connectors', '0006_alter_connector_options_remove_connector_id_and_more'),
-        ('abstractModels', '0004_remove_connectionpoint_id_and_more'),
+        ('abstractModels', '0006_finalize_pk_and_cleanup'),
     ]
 
     operations = [

@@ -5,7 +5,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('CircuitBreakers', '0009_alter_circuitbreaker_options_and_more'),
-        ('abstractModels', '0004_remove_connectionpoint_id_and_more'),
+        ('abstractModels', '0006_finalize_pk_and_cleanup'),
     ]
 
     operations = [
