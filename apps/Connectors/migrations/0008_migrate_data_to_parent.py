@@ -1,0 +1,33 @@
+# 0011_migrate_data_to_parent.py
+from django.db import migrations
+
+def migrate_connector_to_observablemodel(apps, schema_editor):
+    Connector = apps.get_model('Connectors', 'Connector')
+    ObservableModel = apps.get_model('abstractModels', 'ObservableModel')
+
+    for connector in Connector.objects.all():
+        # Create ObservableModel row for this CircuitBreaker
+        observable = ObservableModel.objects.create(
+            # copy the fields from cb to observable here, e.g.
+            # if ObservableModel has 'created_at', 'updated_at' etc, set them here.
+            # add other fields shared between CircuitBreaker and ObservableModel
+            observations=connector.observations,  # Copy observations field here
+        )
+
+        # Link CircuitBreaker to ObservableModel
+        connector.observablemodel_ptr_id = observable.pk
+        connector.save()
+
+def reverse_func(apps, schema_editor):
+    # Optionally, write code to reverse the data migration if necessary
+    pass
+
+class Migration(migrations.Migration):
+
+    dependencies = [
+        ('Connectors', '0007_connector_observablemodel_ptr'),
+    ]
+
+    operations = [
+        migrations.RunPython(migrate_connector_to_observablemodel, reverse_func),
+    ]

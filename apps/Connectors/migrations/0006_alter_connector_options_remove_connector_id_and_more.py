@@ -13,13 +13,5 @@ class Migration(migrations.Migration):
         migrations.AlterModelOptions(
             name='connector',
             options={'base_manager_name': 'objects'},
-        ),
-        migrations.RemoveField(
-            model_name='connector',
-            name='id',
-        ),
-        migrations.RemoveField(
-            model_name='connector',
-            name='observations',
-        ),
+        )
     ]
