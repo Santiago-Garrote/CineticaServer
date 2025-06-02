@@ -3,7 +3,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('Javelins', '0007_move_observations_to_observablemodel'),
+        ('Javelins', '0007_migrate_observations_to_observablemodel'),
     ]
 
     operations = [
