@@ -23,15 +23,6 @@ class Migration(migrations.Migration):
                     to='contenttypes.contenttype'
                 )),
             ],
-        ),
-        migrations.AddField(
-            model_name='connectionpoint',
-            name='observablemodel_ptr',
-            field=models.OneToOneField(
-                null=True,
-                on_delete=django.db.models.deletion.CASCADE,
-                to='abstractModels.observablemodel',
-            ),
-        ),
+        )
     ]
 
