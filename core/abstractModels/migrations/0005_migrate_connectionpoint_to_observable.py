@@ -1,4 +1,16 @@
-from django.db import migrations
+from django.db import migrations, models
+import django.db.models.deletion
+
+import hashlib
+
+def short_fk_name(table_name, column_name):
+    base = f"{table_name}_{column_name}_fk_cp"
+    if len(base) <= 64:
+        return base
+    # Hash para evitar colisiones
+    hash_suffix = hashlib.md5(base.encode()).hexdigest()[:8]
+    return f"{table_name[:20]}_{column_name[:20]}_{hash_suffix}_fk"
+
 
 def migrate_and_rename_id(apps, schema_editor):
     ConnectionPoint = apps.get_model('abstractModels', 'ConnectionPoint')
@@ -7,91 +19,70 @@ def migrate_and_rename_id(apps, schema_editor):
 
     cursor = schema_editor.connection.cursor()
 
-
-
     # 1) Insertar ObservableModel con mismos ids que ConnectionPoint
     for cp in ConnectionPoint.objects.all():
-        # Obtener ContentType específico de la instancia (usando for_concrete_model=False para obtener subclase real)
         ct = ContentType.objects.get_for_model(cp, for_concrete_model=False)
-
         cursor.execute(
             "INSERT INTO abstractModels_observablemodel (id, observations, polymorphic_ctype_id) VALUES (%s, '', %s)",
             [cp.id, ct.id]
         )
 
-    # 2) Deshabilitar restricciones FK para renombrar columna
+    # 2) Deshabilitar FK temporalmente
     cursor.execute("SET FOREIGN_KEY_CHECKS=0;")
 
-    # 3) Renombrar columna `id` a `observablemodel_ptr_id`
-    cursor.execute("ALTER TABLE abstractModels_connectionpoint CHANGE COLUMN id observablemodel_ptr_id bigint NOT NULL;")
+    # 3) Obtener todas las FKs que apuntan a abstractModels_connectionpoint.id
+    cursor.execute("""
+        SELECT
+            table_name,
+            column_name,
+            constraint_name
+        FROM
+            information_schema.key_column_usage
+        WHERE
+            referenced_table_schema = DATABASE()
+            AND referenced_table_name = 'abstractModels_connectionpoint'
+            AND referenced_column_name = 'id';
+    """)
+    fks = cursor.fetchall()
 
-    # 4) Establecer `observablemodel_ptr_id` como PK
+    # Guardar para luego recrearlas
+    fk_info = []
+    for table_name, column_name, constraint_name in fks:
+        fk_info.append((table_name, column_name))
+        cursor.execute(f'ALTER TABLE `{table_name}` DROP FOREIGN KEY `{constraint_name}`;')
+
+    # 4) Renombrar columna y ajustar tipo
+    cursor.execute("ALTER TABLE abstractModels_connectionpoint RENAME COLUMN id TO observablemodel_ptr_id;")
+    cursor.execute("ALTER TABLE abstractModels_connectionpoint MODIFY COLUMN observablemodel_ptr_id bigint NOT NULL;")
+
+    # 5) Cambiar PK
+    cursor.execute("ALTER TABLE abstractModels_connectionpoint DROP PRIMARY KEY;")
     cursor.execute("ALTER TABLE abstractModels_connectionpoint ADD PRIMARY KEY (observablemodel_ptr_id);")
 
-    # 5) Crear FK hacia ObservableModel.id
+    # 6) Crear FK hacia abstractModels_observablemodel.id
     cursor.execute("""
         ALTER TABLE abstractModels_connectionpoint
         ADD CONSTRAINT connectionpoint_observablemodel_fk FOREIGN KEY (observablemodel_ptr_id)
         REFERENCES abstractModels_observablemodel(id) ON DELETE CASCADE;
     """)
 
+    # 7) Recrear FKs originales dinámicamente
+    for table_name, column_name in fk_info:
+        constraint_name = short_fk_name(table_name, column_name)
+        cursor.execute(f"""
+            ALTER TABLE `{table_name}`
+            ADD CONSTRAINT `{constraint_name}`
+            FOREIGN KEY (`{column_name}`)
+            REFERENCES abstractModels_connectionpoint (observablemodel_ptr_id)
+            ON DELETE CASCADE;
+        """)
 
-    # 6) Ajustar constraints FK en esas tablas para apuntar a nueva PK
-    # Connectors_connector.startConnectionPoint_id
-    cursor.execute(
-        "ALTER TABLE Connectors_connector DROP FOREIGN KEY Connectors_connector_startConnectionPoint_8ae0b9ed_fk_abstractM;")
-    cursor.execute("""
-                   ALTER TABLE Connectors_connector
-                       ADD CONSTRAINT Connectors_connector_startConnectionPoint_8ae0b9ed_fk_abstractM
-                           FOREIGN KEY (startConnectionPoint_id)
-                               REFERENCES abstractModels_connectionpoint (observablemodel_ptr_id) ON DELETE CASCADE;
-                   """)
-
-    # Connectors_connector.endConnectionPoint_id
-    cursor.execute(
-        "ALTER TABLE Connectors_connector DROP FOREIGN KEY Connectors_connector_endConnectionPoint_i_307527fd_fk_abstractM;")
-    cursor.execute("""
-                   ALTER TABLE Connectors_connector
-                       ADD CONSTRAINT Connectors_connector_endConnectionPoint_i_307527fd_fk_abstractM
-                           FOREIGN KEY (endConnectionPoint_id)
-                               REFERENCES abstractModels_connectionpoint (observablemodel_ptr_id) ON DELETE CASCADE;
-                   """)
-
-    # Javelins_javelin.connectionpoint_ptr_id
-    cursor.execute(
-        "ALTER TABLE Javelins_javelin DROP FOREIGN KEY Javelins_javelin_connectionpoint_ptr__2aa29503_fk_abstractM;")
-    cursor.execute("""
-                   ALTER TABLE Javelins_javelin
-                       ADD CONSTRAINT Javelins_javelin_connectionpoint_ptr__2aa29503_fk_abstractM
-                           FOREIGN KEY (connectionpoint_ptr_id)
-                               REFERENCES abstractModels_connectionpoint (observablemodel_ptr_id) ON DELETE CASCADE;
-                   """)
-
-    # Outlets_outlet.connectionpoint_ptr_id
-    cursor.execute(
-        "ALTER TABLE Outlets_outlet DROP FOREIGN KEY Outlets_outlet_connectionpoint_ptr__e7a3fdae_fk_abstractM;")
-    cursor.execute("""
-                   ALTER TABLE Outlets_outlet
-                       ADD CONSTRAINT Outlets_outlet_connectionpoint_ptr__e7a3fdae_fk_abstractM
-                           FOREIGN KEY (connectionpoint_ptr_id)
-                               REFERENCES abstractModels_connectionpoint (observablemodel_ptr_id) ON DELETE CASCADE;
-                   """)
-
-    # Panels_panel.connectionpoint_ptr_id
-    cursor.execute("ALTER TABLE Panels_panel DROP FOREIGN KEY Panels_panel_connectionpoint_ptr__4059500c_fk_abstractM;")
-    cursor.execute("""
-                   ALTER TABLE Panels_panel
-                       ADD CONSTRAINT Panels_panel_connectionpoint_ptr__4059500c_fk_abstractM
-                           FOREIGN KEY (connectionpoint_ptr_id)
-                               REFERENCES abstractModels_connectionpoint (observablemodel_ptr_id) ON DELETE CASCADE;
-                   """)
-
-    # Reactivar restricciones FK
+    # 8) Reactivar FK
     cursor.execute("SET FOREIGN_KEY_CHECKS=1;")
 
 
 def reverse_func(apps, schema_editor):
-    # Implementar reverse si hace falta (complicado, opcional)
+    # Omitido por ahora
     pass
 
 
@@ -102,5 +93,27 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(migrate_and_rename_id, reverse_func),
+        migrations.SeparateDatabaseAndState(
+            database_operations=[
+                migrations.RunPython(migrate_and_rename_id, reverse_func),
+            ],
+            state_operations=[
+                migrations.RemoveField(
+                    model_name='connectionpoint',
+                    name='id',
+                ),
+                migrations.AddField(
+                    model_name='connectionpoint',
+                    name='observablemodel_ptr',
+                    field=models.OneToOneField(
+                        auto_created=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        parent_link=True,
+                        primary_key=True,
+                        serialize=False,
+                        to='abstractModels.observablemodel',
+                    ),
+                ),
+            ],
+        )
     ]

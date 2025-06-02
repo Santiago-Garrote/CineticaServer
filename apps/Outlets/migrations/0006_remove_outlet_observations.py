@@ -17,9 +17,10 @@ class Migration(migrations.Migration):
             model_name='outlet',
             name='circuitBreaker',
             field=models.ForeignKey(
-                on_delete=django.db.models.deletion.CASCADE,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
                 to='CircuitBreakers.circuitbreaker',
-                to_field='serial_number',
+                to_field='observablemodel_ptr'
             ),
         ),
     ]

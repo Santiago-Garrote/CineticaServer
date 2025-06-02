@@ -8,6 +8,14 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        migrations.RemoveField(
+            model_name='connector',
+            name='id',
+        ),
+        migrations.RemoveField(
+            model_name='connector',
+            name='observations',
+        ),
         migrations.AlterField(
             model_name='connector',
             name='observablemodel_ptr',
@@ -19,13 +27,5 @@ class Migration(migrations.Migration):
                 serialize=False,
                 to='abstractModels.observablemodel',
             ),
-        ),
-        migrations.RemoveField(
-            model_name='connector',
-            name='id',
-        ),
-        migrations.RemoveField(
-            model_name='connector',
-            name='observations',
         ),
     ]
