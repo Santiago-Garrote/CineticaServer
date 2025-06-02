@@ -33,10 +33,27 @@ def migrate_to_observable_pk(apps, schema_editor):
             f"UPDATE Outlets_outlet SET connectionpoint_ptr_id = {new_id} WHERE connectionpoint_ptr_id = {old_id}")
         cursor.execute(
             f"UPDATE Panels_panel SET connectionpoint_ptr_id = {new_id} WHERE connectionpoint_ptr_id = {old_id}")
+        cursor.execute(
+            # Drop foreign key constraints on dependent tables:
+            "ALTER TABLE Panels_panel DROP FOREIGN KEY Panels_panel_connectionpoint_ptr_id_fk;",
+            "ALTER TABLE Connectors_connector DROP FOREIGN KEY Connectors_connector_startConnectionPoint_id_fk;",
+            "ALTER TABLE Connectors_connector DROP FOREIGN KEY Connectors_connector_endConnectionPoint_id_fk;",
+            "ALTER TABLE Javelins_javelin DROP FOREIGN KEY Javelins_javelin_connectionpoint_ptr_id_fk;",
+            "ALTER TABLE Outlets_outlet DROP FOREIGN KEY Outlets_outlet_connectionpoint_ptr_id_fk;",
 
-        # ❌ DO NOT update the PK on the abstractModels_connectionpoint table.
-        # ❌ That 'id = new_id' update is dangerous — the PK will be updated by removing `id` in next migration.
+            # Drop the id column from ConnectionPoint
+            "ALTER TABLE abstractModels_connectionpoint DROP COLUMN id;",
 
+            # Alter observablemodel_ptr to primary key
+            "ALTER TABLE abstractModels_connectionpoint MODIFY observablemodel_ptr_id bigint NOT NULL PRIMARY KEY;",
+
+            # Recreate the foreign keys now pointing to observablemodel_ptr_id
+            "ALTER TABLE Panels_panel ADD CONSTRAINT Panels_panel_connectionpoint_ptr_id_fk FOREIGN KEY (connectionpoint_ptr_id) REFERENCES abstractModels_connectionpoint(observablemodel_ptr_id) ON DELETE CASCADE;",
+            "ALTER TABLE Connectors_connector ADD CONSTRAINT Connectors_connector_startConnectionPoint_id_fk FOREIGN KEY (startConnectionPoint_id) REFERENCES abstractModels_connectionpoint(observablemodel_ptr_id) ON DELETE CASCADE;",
+            "ALTER TABLE Connectors_connector ADD CONSTRAINT Connectors_connector_endConnectionPoint_id_fk FOREIGN KEY (endConnectionPoint_id) REFERENCES abstractModels_connectionpoint(observablemodel_ptr_id) ON DELETE CASCADE;",
+            "ALTER TABLE Javelins_javelin ADD CONSTRAINT Javelins_javelin_connectionpoint_ptr_id_fk FOREIGN KEY (connectionpoint_ptr_id) REFERENCES abstractModels_connectionpoint(observablemodel_ptr_id) ON DELETE CASCADE;",
+            "ALTER TABLE Outlets_outlet ADD CONSTRAINT Outlets_outlet_connectionpoint_ptr_id_fk FOREIGN KEY (connectionpoint_ptr_id) REFERENCES abstractModels_connectionpoint(observablemodel_ptr_id) ON DELETE CASCADE;",
+        )
     cursor.execute("SET FOREIGN_KEY_CHECKS=1;")
 
 
