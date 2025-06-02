@@ -20,9 +20,10 @@ def migrate_to_observable_pk(apps, schema_editor):
         # Store the mapping
         old_to_new[cp.id] = om.id
 
-    # Now update the primary keys (raw SQL is safest here)
+    cursor.execute("SET FOREIGN_KEY_CHECKS=0;")
+
     for old_id, new_id in old_to_new.items():
-        # 1. Update all foreign keys in other tables first (Connector, Javelin, Outlet, Panel)
+        # Update foreign keys pointing to old_id → new_id
         cursor.execute(
             f"UPDATE Connectors_connector SET startConnectionPoint_id = {new_id} WHERE startConnectionPoint_id = {old_id}")
         cursor.execute(
@@ -34,8 +35,10 @@ def migrate_to_observable_pk(apps, schema_editor):
         cursor.execute(
             f"UPDATE Panels_panel SET connectionpoint_ptr_id = {new_id} WHERE connectionpoint_ptr_id = {old_id}")
 
-        # 2. Then update the primary key in ConnectionPoint
+        # Update the PK itself
         cursor.execute(f"UPDATE abstractModels_connectionpoint SET id = {new_id} WHERE id = {old_id}")
+
+    cursor.execute("SET FOREIGN_KEY_CHECKS=1;")
 
 
 def reverse_func(apps, schema_editor):
