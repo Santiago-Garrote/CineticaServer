@@ -17,6 +17,10 @@ class Migration(migrations.Migration):
             model_name='connectionpoint',
             name='polymorphic_ctype',
         ),
+        migrations.RemoveField(
+            model_name='connectionpoint',
+            name='id',
+        ),
         migrations.AlterField(
             model_name='observablemodel',
             name='id',
