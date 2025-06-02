@@ -18,6 +18,7 @@ class Migration(migrations.Migration):
     dependencies = [
         ('Outlets', '0004_alter_outlet_measurement'),
         ('abstractModels', '0006_finalize_pk_and_cleanup'),
+        ('abstractModels', '0005_migrate_connectionpoint_to_observable'),
     ]
 
     operations = [

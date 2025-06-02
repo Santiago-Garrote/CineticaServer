@@ -6,9 +6,18 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('CircuitBreakers', '0011_migrate_data_to_parent'),
+        ('Outlets','0006_remove_outlet_observations')
     ]
 
     operations = [
+        migrations.RemoveField(
+            model_name='circuitbreaker',
+            name='id',
+        ),
+        migrations.RemoveField(
+            model_name='circuitbreaker',
+            name='observations',
+        ),
         migrations.AlterField(
             model_name='circuitbreaker',
             name='observablemodel_ptr',
@@ -20,13 +29,5 @@ class Migration(migrations.Migration):
                 serialize=False,
                 to='abstractModels.observablemodel',
             ),
-        ),
-        migrations.RemoveField(
-            model_name='circuitbreaker',
-            name='observations',
-        ),
-        migrations.RemoveField(
-            model_name='circuitbreaker',
-            name='id',
-        ),
+        )
     ]

@@ -26,6 +26,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('CircuitBreakers', '0010_circuitbreaker_observablemodel_ptr'),
+        ('abstractModels', '0005_migrate_connectionpoint_to_observable'),
     ]
 
     operations = [

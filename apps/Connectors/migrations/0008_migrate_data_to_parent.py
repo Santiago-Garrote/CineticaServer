@@ -26,6 +26,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('Connectors', '0007_connector_observablemodel_ptr'),
+        ('abstractModels', '0005_migrate_connectionpoint_to_observable'),
     ]
 
     operations = [

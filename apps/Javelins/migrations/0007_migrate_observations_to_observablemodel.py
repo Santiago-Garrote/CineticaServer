@@ -18,6 +18,7 @@ class Migration(migrations.Migration):
     dependencies = [
         ('Javelins', '0006_alter_javelin_connection_alter_javelin_status_and_more'),
         ('abstractModels', '0006_finalize_pk_and_cleanup'),
+        ('abstractModels', '0005_migrate_connectionpoint_to_observable'),
     ]
 
     operations = [

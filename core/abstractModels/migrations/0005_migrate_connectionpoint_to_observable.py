@@ -7,11 +7,13 @@ def migrate_and_rename_id(apps, schema_editor):
 
     cursor = schema_editor.connection.cursor()
 
-    # Obtener ContentType correcto para ObservableModel
-    ct = ContentType.objects.get(app_label='abstractModels', model='observablemodel')
+
 
     # 1) Insertar ObservableModel con mismos ids que ConnectionPoint
     for cp in ConnectionPoint.objects.all():
+        # Obtener ContentType específico de la instancia (usando for_concrete_model=False para obtener subclase real)
+        ct = ContentType.objects.get_for_model(cp, for_concrete_model=False)
+
         cursor.execute(
             "INSERT INTO abstractModels_observablemodel (id, observations, polymorphic_ctype_id) VALUES (%s, '', %s)",
             [cp.id, ct.id]
@@ -96,7 +98,7 @@ def reverse_func(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('abstractModels', '0004_create_observablemodel'),
+        ('abstractModels', '0004_create_observablemodel_and_fk'),
     ]
 
     operations = [
