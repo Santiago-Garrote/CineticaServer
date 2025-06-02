@@ -11,7 +11,7 @@ def migrate_to_observable_pk(apps, schema_editor):
 
     for cp in ConnectionPoint.objects.all():
         # Create ObservableModel
-        om = ObservableModel.objects.create(observations=cp.observations)
+        om = ObservableModel.objects.create(observations='')
 
         # Save reference in ConnectionPoint
         cp.observablemodel_ptr_id = om.id
