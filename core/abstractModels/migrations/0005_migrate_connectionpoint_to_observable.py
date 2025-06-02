@@ -22,14 +22,21 @@ def migrate_to_observable_pk(apps, schema_editor):
 
     # Now update the primary keys (raw SQL is safest here)
     for old_id, new_id in old_to_new.items():
-        # Update ConnectionPoint
+        # 1. Update all foreign keys in other tables first (Connector, Javelin, Outlet, Panel)
+        cursor.execute(
+            f"UPDATE Connectors_connector SET startConnectionPoint_id = {new_id} WHERE startConnectionPoint_id = {old_id}")
+        cursor.execute(
+            f"UPDATE Connectors_connector SET endConnectionPoint_id = {new_id} WHERE endConnectionPoint_id = {old_id}")
+        cursor.execute(
+            f"UPDATE Javelins_javelin SET connectionpoint_ptr_id = {new_id} WHERE connectionpoint_ptr_id = {old_id}")
+        cursor.execute(
+            f"UPDATE Outlets_outlet SET connectionpoint_ptr_id = {new_id} WHERE connectionpoint_ptr_id = {old_id}")
+        cursor.execute(
+            f"UPDATE Panels_panel SET connectionpoint_ptr_id = {new_id} WHERE connectionpoint_ptr_id = {old_id}")
+
+        # 2. Then update the primary key in ConnectionPoint
         cursor.execute(f"UPDATE abstractModels_connectionpoint SET id = {new_id} WHERE id = {old_id}")
-        # Update Javelin
-        cursor.execute(f"UPDATE Javelins_javelin SET connectionpoint_ptr_id = {new_id} WHERE connectionpoint_ptr_id = {old_id}")
-        # Update Outlet
-        cursor.execute(f"UPDATE Outlets_outlet SET connectionpoint_ptr_id = {new_id} WHERE connectionpoint_ptr_id = {old_id}")
-        # Update Panel
-        cursor.execute(f"UPDATE Panels_panel SET connectionpoint_ptr_id = {new_id} WHERE connectionpoint_ptr_id = {old_id}")
+
 
 def reverse_func(apps, schema_editor):
     # Optional: Write reverse logic here
