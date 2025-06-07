@@ -11,15 +11,19 @@ class ListOutletSerializer(serializers.ModelSerializer):
 
 #View used to @PATCH an outlet
 class UpdateOutletSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(read_only=True)
+
     class Meta:
         model = Outlet
-        fields = ['observations', 'measurement']
+        fields = ['id','observations', 'measurement']
 
 #View used to @PATCH the circuit breaker of an outlet
 class UpdateOutletCircuitBreakerSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(read_only=True)
+
     class Meta:
         model = Outlet
-        fields = ['circuitBreaker']
+        fields = ['id','circuitBreaker']
 
 
 #View used to @POST an outlet

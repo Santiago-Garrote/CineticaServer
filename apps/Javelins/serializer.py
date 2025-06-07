@@ -10,9 +10,11 @@ class ListJavelinSerializer(serializers.ModelSerializer):
 
 #Serializer used to @PATCH a javelin
 class UpdateJavelinSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(read_only=True)
+
     class Meta:
         model = Javelin
-        fields = ['status', 'measurementValue', 'observations', 'measurement']
+        fields = ['id', 'status', 'measurementValue', 'observations', 'measurement']
 
 #Serializer used to @POST a javelin
 class CreateJavelinSerializer(serializers.ModelSerializer):

@@ -16,9 +16,11 @@ class ListSectionalPanelSerializer(serializers.ModelSerializer):
 
 #Serializer used to @PATCH a sectional panel
 class UpdateSectionalPanelSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(read_only=True)
+
     class Meta:
         model = SectionalPanel
-        fields = ['hasBar', 'section', 'observation', 'measurement']
+        fields = ['id', 'hasBar', 'section', 'observation', 'measurement']
 
 #Serializer used to @POST a sectional panel
 class CreateSectionalPanelSerializer(serializers.ModelSerializer):
@@ -34,9 +36,11 @@ class ListPrincipalPanelSerializer(serializers.ModelSerializer):
 
 # Serializer used to @PATCH a principal panel
 class UpdatePrincipalPanelSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(read_only=True)
+
     class Meta:
         model = PrincipalPanel
-        fields = ['hasBar', 'hasProtectors', 'section', 'observation', 'measurement']
+        fields = ['id', 'hasBar', 'hasProtectors', 'section', 'observation', 'measurement']
 
 #Serializer used to @POST a principal panel
 class CreatePrincipalPanelSerializer(serializers.ModelSerializer):

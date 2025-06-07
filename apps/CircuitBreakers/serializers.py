@@ -9,9 +9,11 @@ class ListCircuitBreakerSerializer(serializers.ModelSerializer):
 
 #Serializer used to @PATCH all circuit breakers
 class UpdateCircuitBreakerSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(read_only=True)
+
     class Meta:
         model = CircuitBreaker
-        fields = ['I', 'deltaN', 'half', 'In', 'twoIn', 'fiveIn', 'degrees', 'observations', 'measurement']
+        fields = ['id', 'I', 'deltaN', 'half', 'In', 'twoIn', 'fiveIn', 'degrees', 'observations', 'measurement']
 
 #Serializer used to @POST a circuit breaker
 class CreateCircuitBreakerSerializer(serializers.ModelSerializer):

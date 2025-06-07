@@ -36,4 +36,5 @@ urlpatterns = [
     path('Panels/', include('apps.Panels.urls')),
     path('Sectors/', include('apps.Sectors.urls')),
     path('Tools/', include('apps.Tools.urls')),
+    path('Images/', include('apps.Images.urls')),
 ]
